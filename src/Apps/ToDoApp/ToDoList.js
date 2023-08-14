@@ -11,25 +11,41 @@ import data from "./data.json";
 function ToDoList () {
   const [ toDoList, setToDoList ] = useState(data);
   const [userInput, setUserInput] = useState(''); 
-  const [disabled,setDisabled] = useState(true);
-  const [showError, setShowError] = useState(false);
-  const [taskStatus,setTaskStatus] = useState(['In-Progress','Completed']);
+  // const [disabled,setDisabled] = useState(true);
+  const [taskStatus,setTaskStatus] = useState('');
+  const [errors, setErrors] = useState(false);
+  const status = [
+    { value: '', label: 'Select task status' },
+    { value: 'option1', label: 'TODO' },
+    { value: 'option2', label: 'IN-PROGRESS' },
+    { value: 'option3', label: 'COMPLETED' }
+  ];
 
-  useEffect(() => {
-    userInput !== "" ? setDisabled(false) : setDisabled(true);
-  }, [disabled,userInput]);
-  // Set a user input value
+  // useEffect(() => {
+  //   userInput && taskStatus !== "" ? setDisabled(false) : setDisabled(true);
+  // }, [disabled,userInput,taskStatus]);
+  // // Set a user input value
   const updateInput = (event) => {
     const newValue = event.target.value;
-    newValue !== "" ? setDisabled(false) : setDisabled(true);
+    // newValue !== "" ? setDisabled(false) : setDisabled(true);
     setUserInput(newValue);
   }
   const addItem = () => {
-    if(userInput !== "") {
+    debugger
+    if(userInput !== "" && taskStatus !== "") {
       let copy = [...toDoList];
-      copy.push({id: toDoList.length + 1, task: userInput, complete: false });
+      // copy.push({id: toDoList.length + 1, task: userInput, complete: false });
+      if(taskStatus ===  'TODO') {
+        copy.push({id: toDoList.length + 1, task: userInput, complete: false, inprogress:false, todo:true });
+      }
+      if(taskStatus ===  'IN-PROGRESS') {
+        copy.push({id: toDoList.length + 1, task: userInput, complete: false, inprogress:true,todo:false });
+      }
+      if(taskStatus ===  'COMPLETED') {
+        copy.push({id: toDoList.length + 1, task: userInput, complete: true, inprogress:false, todo:false });
+      }
       setToDoList(copy);
-      setUserInput("");
+      // setUserInput("");
     }
   }
 
@@ -49,21 +65,40 @@ function ToDoList () {
     }
   }
 
+  const moveToNextStatus = (index) =>  {
+    let editlistToDo = [...toDoList];
+    // let editedTodo = prompt('Edit the todo:');
+    // if (editedTodo !== null && editedTodo.trim() !== '') {
+    //   const updatedTodos = [...editlistToDo];
+    //   updatedTodos[index].task = editedTodo;
+    //   setToDoList(updatedTodos)
+    // }
+  }
+
+
+
   const handleKeyDown = (e) => {
     if(e.key === 'Enter') {
       addItem()
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSelectStatus = (e) => {
     debugger
+    setTaskStatus(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    const form = e.currentTarget;
     e.preventDefault();
-    if (!e.target.checkValidity()) {
-      setShowError(true);
-    } else {
-      setShowError(false);
-      // Handle form submission
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    else {
+      addItem();
+    }
+    setErrors(true);
   };
 
   return (
@@ -80,7 +115,7 @@ function ToDoList () {
       TODO LIST
       </Row>
       <hr />
-      <Form onSubmit={handleSubmit} validated={showError}>
+      <Form onSubmit={handleSubmit} noValidate validated={errors}>
         <Row>
           <Col md={{ span: 5 }}>
             <Form.Group controlId="inputField" className="mb-3">
@@ -93,27 +128,31 @@ function ToDoList () {
                   onKeyPress={handleKeyDown}
                   aria-label="add something"
                   aria-describedby="basic-addon2"
+                  className={`form-control ${errors.userInput ? 'is-invalid' : ''}`}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  This field is required.
+                  Please enter a task.
                 </Form.Control.Feedback>
               </InputGroup>
             </Form.Group>
           </Col>
           <Col md={{ span: 2 }}>
             <Form.Group controlId="inputtaskstatus" className="mb-3">
-              <Form.Select aria-label="Default select example" required>
-                <option>Task status</option>
-                {taskStatus.map((item, index) => {
+              <Form.Select value={taskStatus} onChange={handleSelectStatus} label="Agree to terms and conditions" aria-label="Default select example" 
+              required
+              className={`form-control ${errors.taskStatus ? 'is-invalid' : ''}`}
+              >
+                {/* <option value="" disabled>Select an option</option> */}
+                {status.map((item, index) => {
                   return (
-                    <option value="1">{item}</option>
+                    <option value={item.label} key={item.value}>{item.label}</option>
                   );
                 })}
               </Form.Select>
-              {/* <Form.Control.Feedback type="invalid">
-                This field is required.
-              </Form.Control.Feedback> */}
+              <Form.Control.Feedback type="invalid">
+                  Please set status.
+                </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col>
@@ -121,7 +160,7 @@ function ToDoList () {
               <Button
                 variant="dark"
                 className="mt-2"
-                // disabled={disabled}
+                // disabled={errors}
                 type="submit"
                 // onClick={() => addItem()}
               >
@@ -148,7 +187,7 @@ function ToDoList () {
                           <Button style={{marginRight:"10px"}}
                             variant = "light" onClick={() => deleteItem(item.id)}>Delete</Button>
                           <Button style={{marginRight:"10px"}} variant = "light" onClick={() => editItem(index)}>Edit</Button>
-                          <Button onClick={() => editItem(index)} className={`btn ${item.complete ? 'btn-success' : 'btn-primary'}`}>{item.complete ? 'Completed' : 'Move To Complete'}</Button>
+                          <Button onClick={() => moveToNextStatus(index)} className={`btn ${item.complete ? 'btn-success' : 'btn-primary'}`}>{item.todo ? "Move to In-Progress" : item.inprogress ? 'Move to Complete' : 'Completed'}</Button>
                         </span>
                     </ListGroup.Item>
                   </div>
