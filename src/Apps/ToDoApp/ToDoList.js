@@ -67,6 +67,7 @@ function ToDoList () {
 
   const moveToNextStatus = (index) =>  {
     let editlistToDo = [...toDoList];
+    
     // let editedTodo = prompt('Edit the todo:');
     // if (editedTodo !== null && editedTodo.trim() !== '') {
     //   const updatedTodos = [...editlistToDo];
