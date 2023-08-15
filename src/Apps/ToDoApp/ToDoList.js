@@ -1,30 +1,41 @@
-import { useState,useEffect } from "react";
-import { InputGroup, FormControl,Form} from 'react-bootstrap';
+import { useState, useEffect } from "react";
+import { InputGroup, FormControl, Form, Card } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
 import data from "./data.json";
 
-function ToDoList () {
-  const [ toDoList, setToDoList ] = useState(data);
-  const [userInput, setUserInput] = useState(''); 
-  // const [disabled,setDisabled] = useState(true);
-  const [taskStatus,setTaskStatus] = useState('');
+function ToDoList() {
+  const [toDoList, setToDoList] = useState(data);
+  const [userInput, setUserInput] = useState('');
+  const [taskStatus, setTaskStatus] = useState('');
   const [errors, setErrors] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [completionTime, setCompletionTime] = useState(null);
+
   const status = [
     { value: '', label: 'Select task status' },
-    { value: 'option1', label: 'TODO' },
-    { value: 'option2', label: 'IN-PROGRESS' },
-    { value: 'option3', label: 'COMPLETED' }
+    { value: 'TODO', label: 'TODO' },
+    { value: 'IN-PROGRESS', label: 'IN-PROGRESS' },
+    { value: 'COMPLETED', label: 'COMPLETED' }
   ];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setToDoList((prevTasks) =>
+        prevTasks.map((task) =>
+          task.status === 'IN-PROGRESS'
+            ? { ...task, elapsedTime: task.elapsedTime + 1 }
+            : task
+        )
+      );
+    }, 1000);
 
-  // useEffect(() => {
-  //   userInput && taskStatus !== "" ? setDisabled(false) : setDisabled(true);
-  // }, [disabled,userInput,taskStatus]);
-  // // Set a user input value
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   const updateInput = (event) => {
     const newValue = event.target.value;
     // newValue !== "" ? setDisabled(false) : setDisabled(true);
@@ -32,30 +43,29 @@ function ToDoList () {
   }
   const addItem = () => {
     debugger
-    if(userInput !== "" && taskStatus !== "") {
+    if (userInput !== "" && taskStatus !== "") {
       let copy = [...toDoList];
       // copy.push({id: toDoList.length + 1, task: userInput, complete: false });
-      if(taskStatus ===  'TODO') {
-        copy.push({id: toDoList.length + 1, task: userInput, complete: false, inprogress:false, todo:true });
-      }
-      if(taskStatus ===  'IN-PROGRESS') {
-        copy.push({id: toDoList.length + 1, task: userInput, complete: false, inprogress:true,todo:false });
-      }
-      if(taskStatus ===  'COMPLETED') {
-        copy.push({id: toDoList.length + 1, task: userInput, complete: true, inprogress:false, todo:false });
-      }
+      // if (taskStatus === 'TODO') {
+        copy.push({ id: toDoList.length + 1, task: userInput, complete: false, inprogress: false, todo: true, status: "todo" ,startTime: null, elapsedTime: 0});
+      // }
+      // if (taskStatus === 'IN-PROGRESS') {
+      //   copy.push({ id: toDoList.length + 1, task: userInput, complete: false, inprogress: true, todo: false, status: "in-progress" });
+      // }
+      // if (taskStatus === 'COMPLETED') {
+      //   copy.push({ id: toDoList.length + 1, task: userInput, complete: true, inprogress: false, todo: false, status: "completed" });
+      // }
       setToDoList(copy);
-      // setUserInput("");
     }
   }
 
   const deleteItem = (item_id) => {
-    let copy  = [...toDoList];
-    let updateList =copy.filter((item) => item.id !== item_id);
+    let copy = [...toDoList];
+    let updateList = copy.filter((item) => item.id !== item_id);
     setToDoList(updateList);
   }
 
-  const editItem = (index) =>  {
+  const editItem = (index) => {
     let editlistToDo = [...toDoList];
     let editedTodo = prompt('Edit the todo:');
     if (editedTodo !== null && editedTodo.trim() !== '') {
@@ -65,9 +75,33 @@ function ToDoList () {
     }
   }
 
-  const moveToNextStatus = (index) =>  {
-    let editlistToDo = [...toDoList];
-    
+  const moveToNextStatus = (item, index) => {
+    debugger
+    // if(item.todo) {
+    //   item.inprogress = true;
+    // }
+    // item.todo ? item.inprogress = true
+    let copy = [...toDoList];
+    if (item.status === 'todo') {
+      copy[index].todo = false;
+      copy[index].inprogress = true;
+      copy[index].complete = false;
+      copy[index].status = "in-progress";
+      setToDoList(copy);
+      setTaskStatus(item.status);
+      
+    }
+    else if (item.status === 'in-progress') {
+      copy[index].todo = false;
+      copy[index].inprogress = false;
+      copy[index].complete = true;
+      copy[index].status = "completed";
+      setToDoList(copy);
+      setTaskStatus(item.status);
+    }
+
+    // let editlistToDo = [...toDoList];
+
     // let editedTodo = prompt('Edit the todo:');
     // if (editedTodo !== null && editedTodo.trim() !== '') {
     //   const updatedTodos = [...editlistToDo];
@@ -76,20 +110,18 @@ function ToDoList () {
     // }
   }
 
-
-
   const handleKeyDown = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       addItem()
     }
   }
 
   const handleSelectStatus = (e) => {
-    debugger
     setTaskStatus(e.target.value)
   }
 
   const handleSubmit = (e) => {
+    debugger
     const form = e.currentTarget;
     e.preventDefault();
     if (form.checkValidity() === false) {
@@ -98,6 +130,8 @@ function ToDoList () {
     }
     else {
       addItem();
+      setUserInput("");
+      setTaskStatus(status[0]);
     }
     setErrors(true);
   };
@@ -105,7 +139,7 @@ function ToDoList () {
   return (
     <Container>
       <Row
-        style = {{
+        style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -113,7 +147,7 @@ function ToDoList () {
           fontWeight: "bolder",
         }}
       >
-      TODO LIST
+        TODO LIST
       </Row>
       <hr />
       <Form onSubmit={handleSubmit} noValidate validated={errors}>
@@ -140,20 +174,23 @@ function ToDoList () {
           </Col>
           <Col md={{ span: 2 }}>
             <Form.Group controlId="inputtaskstatus" className="mb-3">
-              <Form.Select value={taskStatus} onChange={handleSelectStatus} label="Agree to terms and conditions" aria-label="Default select example" 
-              required
-              className={`form-control ${errors.taskStatus ? 'is-invalid' : ''}`}
+              <Form.Select
+                value={taskStatus}
+                onChange={handleSelectStatus}
+                required
+                // isInvalid={!!errors.status}
+                className={`form-control ${errors.taskStatus ? 'is-invalid' : ''}`}
               >
                 {/* <option value="" disabled>Select an option</option> */}
-                {status.map((item, index) => {
+                {status.map((item) => {
                   return (
-                    <option value={item.label} key={item.value}>{item.label}</option>
+                    <option value={item.value} key={item.value}>{item.label}</option>
                   );
                 })}
               </Form.Select>
               <Form.Control.Feedback type="invalid">
-                  Please set status.
-                </Form.Control.Feedback>
+                Please select status.
+              </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col>
@@ -163,9 +200,9 @@ function ToDoList () {
                 className="mt-2"
                 // disabled={errors}
                 type="submit"
-                // onClick={() => addItem()}
+              // onClick={() => addItem()}
               >
-              ADD
+                ADD
               </Button>
             </InputGroup>
           </Col>
@@ -174,26 +211,23 @@ function ToDoList () {
       <Row>
         {toDoList.map((item, index) => {
           return (
-            <Col md={{ span: 6}}>
-            <ListGroup>
-                  <div key = {index} > 
-                    <ListGroup.Item
-                        variant="dark"
-                        action
-                        style={{display:"flex",justifyContent:'space-between'
-                      }}
-                    >
-                      {item.task}
-                        <span>
-                          <Button style={{marginRight:"10px"}}
-                            variant = "light" onClick={() => deleteItem(item.id)}>Delete</Button>
-                          <Button style={{marginRight:"10px"}} variant = "light" onClick={() => editItem(index)}>Edit</Button>
-                          <Button onClick={() => moveToNextStatus(index)} className={`btn ${item.complete ? 'btn-success' : 'btn-primary'}`}>{item.todo ? "Move to In-Progress" : item.inprogress ? 'Move to Complete' : 'Completed'}</Button>
-                        </span>
-                    </ListGroup.Item>
-                  </div>
-            </ListGroup>
-          </Col>
+            <Col md={{ span: 4 }}>
+              <Card>
+                <div key={index} >
+                  <Card.Body>
+                    <Card.Title>Name: {item.task}</Card.Title>
+                    <Card.Text>
+                      <p>Status: {item.status}</p>
+                      <Button style={{ marginRight: "10px" }}
+                        variant="light" onClick={() => deleteItem(item.id)}>Delete</Button>
+                      <Button style={{ marginRight: "10px" }} variant="light" onClick={() => editItem(index)}>Edit</Button>
+                      <Button onClick={() => moveToNextStatus(item, index)} className={`btn ${item.todo ? "btn-primary" : item.inprogress ? 'btn-warning' : 'btn-success'}`}>{item.todo ? "Move to In-Progress" : item.inprogress ? 'Move to Complete' : 'Completed'}</Button>
+                      <p><p>Timer: {timer} seconds</p></p>
+                    </Card.Text>
+                  </Card.Body>
+                </div>
+              </Card>
+            </Col>
           );
         })}
       </Row>
@@ -202,3 +236,4 @@ function ToDoList () {
 }
 
 export default ToDoList;
+
