@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { InputGroup, FormControl, Form, Card } from 'react-bootstrap';
+import { InputGroup, FormControl, Form, Card,Badge,Button } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import data from "./data.json";
 
 function ToDoList() {
@@ -12,15 +11,14 @@ function ToDoList() {
   const [userInput, setUserInput] = useState('');
   const [taskStatus, setTaskStatus] = useState('');
   const [errors, setErrors] = useState(false);
-  const [timer, setTimer] = useState(0);
-  const [completionTime, setCompletionTime] = useState(null);
-
+  
   const status = [
     { value: '', label: 'Select task status' },
     { value: 'TODO', label: 'TODO' },
     { value: 'IN-PROGRESS', label: 'IN-PROGRESS' },
     { value: 'COMPLETED', label: 'COMPLETED' }
   ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setToDoList((prevTasks) =>
@@ -42,22 +40,20 @@ function ToDoList() {
     setUserInput(newValue);
   }
   const addItem = () => {
-    debugger
     if (userInput !== "" && taskStatus !== "") {
       let copy = [...toDoList];
-      // copy.push({id: toDoList.length + 1, task: userInput, complete: false });
-      // if (taskStatus === 'TODO') {
-        copy.push({ id: toDoList.length + 1, task: userInput, complete: false, inprogress: false, todo: true, status: "todo" ,startTime: null, elapsedTime: 0});
-      // }
-      // if (taskStatus === 'IN-PROGRESS') {
-      //   copy.push({ id: toDoList.length + 1, task: userInput, complete: false, inprogress: true, todo: false, status: "in-progress" });
-      // }
-      // if (taskStatus === 'COMPLETED') {
-      //   copy.push({ id: toDoList.length + 1, task: userInput, complete: true, inprogress: false, todo: false, status: "completed" });
-      // }
+      copy.push({ id: toDoList.length + 1, task: userInput, status: "TODO" ,startTime: null, elapsedTime: 0});
       setToDoList(copy);
     }
   }
+
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+  
+    return `${hours}h ${minutes}m ${remainingSeconds}s`;
+  };
 
   const deleteItem = (item_id) => {
     let copy = [...toDoList];
@@ -75,40 +71,32 @@ function ToDoList() {
     }
   }
 
-  const moveToNextStatus = (item, index) => {
+  // const moveToNextStatus = (item, index) => {
+  //   let copy = [...toDoList];
+  //   if (item.status === 'TODO') {
+  //     copy[index].status = "IN-PROGRESS";
+  //     setToDoList(copy);
+  //     setTaskStatus(item.status);
+  //     startTask(item.id);
+  //   }
+  // }
+
+  const startTask = (taskId) => {
+    setToDoList((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, status: 'IN-PROGRESS', startTime: Date.now() } : task
+      )
+    );
+  };
+
+  const completeTask = (taskId) => {
     debugger
-    // if(item.todo) {
-    //   item.inprogress = true;
-    // }
-    // item.todo ? item.inprogress = true
-    let copy = [...toDoList];
-    if (item.status === 'todo') {
-      copy[index].todo = false;
-      copy[index].inprogress = true;
-      copy[index].complete = false;
-      copy[index].status = "in-progress";
-      setToDoList(copy);
-      setTaskStatus(item.status);
-      
-    }
-    else if (item.status === 'in-progress') {
-      copy[index].todo = false;
-      copy[index].inprogress = false;
-      copy[index].complete = true;
-      copy[index].status = "completed";
-      setToDoList(copy);
-      setTaskStatus(item.status);
-    }
-
-    // let editlistToDo = [...toDoList];
-
-    // let editedTodo = prompt('Edit the todo:');
-    // if (editedTodo !== null && editedTodo.trim() !== '') {
-    //   const updatedTodos = [...editlistToDo];
-    //   updatedTodos[index].task = editedTodo;
-    //   setToDoList(updatedTodos)
-    // }
-  }
+    setToDoList((prevTasks) => 
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, status: 'COMPLETED' } : task
+      )
+    );
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -116,12 +104,11 @@ function ToDoList() {
     }
   }
 
-  const handleSelectStatus = (e) => {
-    setTaskStatus(e.target.value)
-  }
+  // const handleSelectStatus = (e) => {
+  //   setTaskStatus(e.target.value)
+  // }
 
   const handleSubmit = (e) => {
-    debugger
     const form = e.currentTarget;
     e.preventDefault();
     if (form.checkValidity() === false) {
@@ -172,16 +159,14 @@ function ToDoList() {
               </InputGroup>
             </Form.Group>
           </Col>
-          <Col md={{ span: 2 }}>
+          {/* <Col md={{ span: 2 }}>
             <Form.Group controlId="inputtaskstatus" className="mb-3">
               <Form.Select
                 value={taskStatus}
                 onChange={handleSelectStatus}
                 required
-                // isInvalid={!!errors.status}
                 className={`form-control ${errors.taskStatus ? 'is-invalid' : ''}`}
               >
-                {/* <option value="" disabled>Select an option</option> */}
                 {status.map((item) => {
                   return (
                     <option value={item.value} key={item.value}>{item.label}</option>
@@ -192,15 +177,13 @@ function ToDoList() {
                 Please select status.
               </Form.Control.Feedback>
             </Form.Group>
-          </Col>
+          </Col> */}
           <Col>
             <InputGroup className="mb-3">
               <Button
                 variant="dark"
                 className="mt-2"
-                // disabled={errors}
                 type="submit"
-              // onClick={() => addItem()}
               >
                 ADD
               </Button>
@@ -212,17 +195,38 @@ function ToDoList() {
         {toDoList.map((item, index) => {
           return (
             <Col md={{ span: 4 }}>
-              <Card>
+              <Card className="mb-3">
                 <div key={index} >
                   <Card.Body>
-                    <Card.Title>Name: {item.task}</Card.Title>
+                    <Card.Title>{item.task}</Card.Title>
                     <Card.Text>
-                      <p>Status: {item.status}</p>
+                      {item.status === 'TODO' && (
+                        <p>status: <Badge bg="primary"> {item.status}</Badge></p>
+                      )}
+                      {item.status === 'IN-PROGRESS' && (
+                        <p>status: <Badge bg="warning"> {item.status}</Badge></p>
+                      )}
+                      {item.status === 'COMPLETED' && (
+                        <p>status: <Badge bg="success"> {item.status}</Badge></p>
+                      )}
                       <Button style={{ marginRight: "10px" }}
-                        variant="light" onClick={() => deleteItem(item.id)}>Delete</Button>
-                      <Button style={{ marginRight: "10px" }} variant="light" onClick={() => editItem(index)}>Edit</Button>
-                      <Button onClick={() => moveToNextStatus(item, index)} className={`btn ${item.todo ? "btn-primary" : item.inprogress ? 'btn-warning' : 'btn-success'}`}>{item.todo ? "Move to In-Progress" : item.inprogress ? 'Move to Complete' : 'Completed'}</Button>
-                      <p><p>Timer: {timer} seconds</p></p>
+                        variant="outline-danger" onClick={() => deleteItem(item.id)}>Delete</Button>
+                      <Button style={{ marginRight: "10px" }} variant="outline-info" onClick={() => editItem(index)}>Edit</Button>
+                      {/* <Button onClick={() => moveToNextStatus(item, index)} className={`btn ${item.status === 'TODO' ? "btn-primary" : item.status === 'IN-PROGRESS' ? 'btn-warning' : 'btn-success'}`}>{item.status === "TODO" ? "Start Task" : item.status === "IN-PROGRESS" ? 'Move to Complete' : 'Completed'}</Button> */}
+                      {item.status === 'IN-PROGRESS' && (
+                        <div>
+                          <p className="mt-2">Timer: {formatTime(item.elapsedTime)} seconds</p>
+                          <Button variant="warning" onClick={() => completeTask(item.id)}>Complete Task</Button>
+                        </div>
+                      )}
+                      {item.status === 'COMPLETED' && (
+                        <div>
+                          <p className="mt-2 mb-0"><span className="fw-bolder">Task completed in</span>: {formatTime(item.elapsedTime)} seconds</p>
+                        </div>
+                      )}
+                      {item.status === 'TODO' && (
+                        <Button variant="info" onClick={() => startTask(item.id)}>Start Task</Button>
+                      )}
                     </Card.Text>
                   </Card.Body>
                 </div>

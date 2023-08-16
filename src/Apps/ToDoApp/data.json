@@ -1,82 +1,55 @@
 [{
     "id": 1,
     "task": "Give dog a bath",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 2,
     "task": "Do laundry",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 3,
     "task": "Vacuum floor",
-    "complete": false,
-    "inprogress": true,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 4,
     "task": "Feed cat",
-    "complete": true,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 5,
     "task": "Change light bulbs",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 6,
     "task": "Go to Store",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 7,
     "task": "Fill gas tank",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 8,
     "task": "Change linens",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }, {
     "id": 9,
     "task": "Rake leaves",
-    "complete": false,
-    "inprogress": false,
-    "todo": true,
-    "status": "todo",
+    "status": "TODO",
     "startTime": null, 
     "elapsedTime": 0
   }]
