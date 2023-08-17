@@ -17,8 +17,11 @@ const Home = () => {
             <li className="list-group-item">
               <Link to="/todocallback">useCallBack</Link>
             </li>
-            <li className="list-group-item">
+            {/* <li className="list-group-item">
               <a href="/apptodo" target="_blank">ChatgptToDo</a>
+            </li> */}
+            <li className="list-group-item">
+              <a href="/weather_app" target="_blank">WeatherApp</a>
             </li>
           </ul>
         </nav>

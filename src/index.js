@@ -10,6 +10,7 @@ import Home from './Apps/Home';
 import reportWebVitals from './reportWebVitals';
 import IndexCallBack from './Apps/CallBack/IndexCallBack';
 import TaskListWithTimers from './Apps/chatgptapp';
+import WeatherApp from './Apps/WeatherApp/WeatherApp';
 export default function App() {
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="reducer" element={<Reducer />} />
           <Route path="todocallback" element={<IndexCallBack />} />
           <Route path="apptodo" element={<TaskListWithTimers />} />
+          <Route path="weather_app" element={<WeatherApp />} />
         </Route>
       </Routes>
     </BrowserRouter>
