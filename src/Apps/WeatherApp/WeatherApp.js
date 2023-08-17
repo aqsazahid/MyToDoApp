@@ -23,6 +23,23 @@ export const WeatherApp = () => {
     if (cityname === "") {
       return 0;
     }
+    // const key = "8f7d6975c8cfba9c300d75f334bf084f"
+    // let url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${key}`;
+    // let response = await fetch(url);
+    // let data = await response.json();
+    // console.log(data)
+    // setWind(data.wind.speed);
+    // setTemp(data.main.temp);
+    // setHumidity(data.main.humidity);
+    // setCity(data.name);
+    fetchData();
+  }
+
+  const cityName = (e) => {
+    setName(e.target.value);
+  }
+
+  const fetchData = async  () => {
     const key = "8f7d6975c8cfba9c300d75f334bf084f"
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${key}`;
     let response = await fetch(url);
@@ -34,9 +51,11 @@ export const WeatherApp = () => {
     setCity(data.name);
   }
 
-  const cityName = (e) => {
-    setName(e.target.value);
-  }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      fetchData();
+    }
+  } 
   return (
     <div className="card">
       <div className="search">
