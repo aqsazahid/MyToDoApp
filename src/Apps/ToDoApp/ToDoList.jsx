@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from 'react';
 import { InputGroup, FormControl, Form, Card,Badge,Button } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css";
 import Container from "react-bootstrap/Container";
@@ -71,16 +72,6 @@ function ToDoList() {
     }
   }
 
-  // const moveToNextStatus = (item, index) => {
-  //   let copy = [...toDoList];
-  //   if (item.status === 'TODO') {
-  //     copy[index].status = "IN-PROGRESS";
-  //     setToDoList(copy);
-  //     setTaskStatus(item.status);
-  //     startTask(item.id);
-  //   }
-  // }
-
   const startTask = (taskId) => {
     setToDoList((prevTasks) =>
       prevTasks.map((task) =>
@@ -90,7 +81,6 @@ function ToDoList() {
   };
 
   const completeTask = (taskId) => {
-    debugger
     setToDoList((prevTasks) => 
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, status: 'COMPLETED' } : task
@@ -103,10 +93,6 @@ function ToDoList() {
       addItem()
     }
   }
-
-  // const handleSelectStatus = (e) => {
-  //   setTaskStatus(e.target.value)
-  // }
 
   const handleSubmit = (e) => {
     const form = e.currentTarget;

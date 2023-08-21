@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
+import React from 'react';
 import Container from "react-bootstrap/Container";
 const Home = () => {
     return (

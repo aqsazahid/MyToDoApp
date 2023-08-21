@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import React from 'react';
 import ReactDOM from "react-dom/client";
 import  ChildCallBack from "./ChildCallBack";
 import Container from "react-bootstrap/Container";
@@ -14,11 +15,6 @@ const IndexCallBack = () => {
   const addTodo = () => {
     setTodos((t) => [...t, "New Todo"]);
   };
-
-    // const addTodo = useCallback(() => {
-    //     debugger
-    //     setTodos((t) => [...t, "New Todo"]);
-    // }, [todos]);
 
   return (
     <>
