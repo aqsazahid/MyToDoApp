@@ -1,0 +1,17 @@
+.recipe {
+    .search-input {
+        padding: 6px 16px;
+        min-width: 200px;
+        max-width: 100vw;
+        font-size: 15px;
+    }
+
+}
+.search-btn {
+    margin-left: 6px;
+    background-color: aqua;
+    border: 1px solid aqua;
+    font-size: 15px;
+    padding: 6px 16px;
+    color: #ffffff;
+}

@@ -23,6 +23,9 @@ const Home = () => {
             <li className="list-group-item">
               <a href="/weather_app" target="_blank">WeatherApp</a>
             </li>
+            <li className="list-group-item">
+              <a href="/food_app" target="_blank">FoodRecepieApp</a>
+            </li>
           </ul>
         </nav>
         <Outlet />

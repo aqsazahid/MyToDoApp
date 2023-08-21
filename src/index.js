@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals';
 import IndexCallBack from './Apps/CallBack/IndexCallBack';
 import TaskListWithTimers from './Apps/chatgptapp';
 import WeatherApp from './Apps/WeatherApp/WeatherApp';
+import FoodRecepieApp from './Apps/FoodRecepieApp/RecepieIndex';
 export default function App() {
   return (
     <BrowserRouter>
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="todocallback" element={<IndexCallBack />} />
           <Route path="apptodo" element={<TaskListWithTimers />} />
           <Route path="weather_app" element={<WeatherApp />} />
+          <Route path="food_app" element={<FoodRecepieApp />} />
         </Route>
       </Routes>
     </BrowserRouter>

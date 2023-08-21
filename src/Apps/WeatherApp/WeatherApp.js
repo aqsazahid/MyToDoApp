@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState } from 'react';
 import './WeatherApp.css';
 import search_icon from './Assets/search.png';
 import clear_icon from './Assets/clear.png';
@@ -80,7 +80,7 @@ export const WeatherApp = () => {
   } 
 
   return (
-    <div className="card wheather">
+    <div className="card weather">
       <div className="search">
         <input 
           onChange = {cityName} 
@@ -94,7 +94,7 @@ export const WeatherApp = () => {
         <button onClick={()=>{search()}}><img src={search_icon} alt="search_icon"/></button>
       </div>
       { !error && ( 
-        <div className="weather">
+        <div>
           <img src = {wicon} className='weather-icon' alt="weather-icon"/>
           <h1 className='temp'>{temp}</h1>
           <h2 className="city">{city}</h2>
