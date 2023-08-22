@@ -1,3 +1,13 @@
+html {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
 .recipe {
     .search-input {
         font-size: 15px;
@@ -9,12 +19,11 @@
 
 .recipe .holder {
     height: 38px;
-    margin: 0 auto;
-    max-width: 700px;
     background: #FFF;
     border: 1px solid #BFBFBF;
     -webkit-border-radius: 30px;
     box-shadow: 1px 1px 2px #ccc inset;
+    width: 750px;
 }
 
 .recipe .holder .field {
@@ -63,7 +72,6 @@
 .recipeTile .recipe_name {
     height: 34px;
     margin: 0px 10px;
-    overflow: hidden;
     font: normal 16px Arial;
     text-shadow: 1px 1px 0px #fff;
 }
@@ -97,5 +105,19 @@
     font-weight: bold;
     white-space: nowrap;
     text-shadow: 1px 1px 0px #fff;
+}
+
+.recipeTile .img-parent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.recipe .position {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
 }
 
